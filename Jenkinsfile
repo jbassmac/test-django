@@ -11,6 +11,7 @@ pipeline{
         sh '''
           echo Run docker image ls
           docker image ls
+        '''
       }
     }
   }
