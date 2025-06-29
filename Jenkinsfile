@@ -9,7 +9,7 @@ pipeline{
     stage('Build docker image'){
       steps{
         sh '''
-          echo Run docker image ls
+          docker build -t test:django .
           docker image ls
         '''
       }
