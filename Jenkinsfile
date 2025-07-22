@@ -10,8 +10,8 @@ pipeline{
       steps{
         withAWS(region: 'us-east-2', credentials: 'smanning-aws-creds'){
           sh '''
-          $password = aws ecr get-login-password --region us-east-2
-          docker login --username smanning.aws --password $password 690735260167.dkr.ecr.us-east-2.amazonaws.com
+          export PASSWORD=$(aws ecr get-login-password --region us-east-2)
+          docker login --username smanning.aws --password $PASSWORD 690735260167.dkr.ecr.us-east-2.amazonaws.com
           '''
         }
       }
