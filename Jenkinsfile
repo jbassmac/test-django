@@ -6,11 +6,29 @@ pipeline{
         git branch: 'main', url: 'https://github.com/jbassmac/test-django'
       }
     }
+    stage('Login to ECR'){
+      steps{
+        withAWS(region: 'us-east-2', credentials: 'smanning-aws-creds'){
+          sh '''
+          $password = aws ecr get-login-password --region us-east2
+          docker login --username smanning.aws --password $password 690735260167.dkr.ecr.us-east-2.amazonaws.com
+          '''
+        }
+      }
+    }
     stage('Build docker image'){
       steps{
         sh '''
-          docker build -t test:django .
+          docker build -t spadertech:django .
           docker image ls
+          docker tag spadertech:django 690735260167.dkr.ecr.us-east-2.amazonaws.com/spadertech:django
+        '''
+      }
+    }
+    stage('Pushing image to ECR'){
+      steps{
+        sh '''
+        docker push 690735260167.dkr.ecr.us-east-2.amazonaws.com/spadertech:django
         '''
       }
     }
