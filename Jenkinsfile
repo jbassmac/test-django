@@ -1,5 +1,5 @@
 pipeline{
-  agent stecc02
+  agent { label 'linux' }
   stages{
     stage('Checkout'){
       steps{
