@@ -13,7 +13,7 @@ pipeline{
                 credentialsId: 'smanning-aws-creds'
             ]]) {
                 sh '''
-                aws sts get-caller-identity --region $AWS_REGION
+                aws sts get-caller-identity --region us-east-2
                 '''
             }
         }
