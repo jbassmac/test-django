@@ -14,25 +14,13 @@ pipeline{
             ]]) {
                 sh '''
                 aws sts get-caller-identity --region us-east-2
+                #docker build -t spadertech/django:1.1 .
+                docker image ls
+                #docker tag spadertech/django:1.1 690735260167.dkr.ecr.us-east-2.amazonaws.com/spadertech/django:1.1
+                docker push 690735260167.dkr.ecr.us-east-2.amazonaws.com/spadertech/django:1.1
                 '''
             }
         }
-    }
-    stage('Build docker image'){
-      steps{
-        sh '''
-          docker build -t spadertech/django:1.1 .
-          docker image ls
-          docker tag spadertech/django:1.1 690735260167.dkr.ecr.us-east-2.amazonaws.com/spadertech/django:1.1
-        '''
-      }
-    }
-    stage('Pushing image to ECR'){
-      steps{
-        sh '''
-        docker push 690735260167.dkr.ecr.us-east-2.amazonaws.com/spadertech/django:1.1
-        '''
-      }
     }
   }
 }
