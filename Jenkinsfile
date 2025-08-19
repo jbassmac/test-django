@@ -6,28 +6,31 @@ pipeline{
         git branch: 'main', url: 'https://github.com/jbassmac/test-django'
       }
     }
-    stage('Login to ECR'){
-      steps{
-        withAWS(region: 'us-east-2', credentials: 'smanning-aws-creds'){
-          sh '''
-          docker login --username smanning.aws --password $(aws ecr get-login-password --region us-east-2) 690735260167.dkr.ecr.us-east-2.amazonaws.com
-          '''
+    stage("Test AWS CLI") {
+        steps {
+            withCredentials([[
+                $class: 'AmazonWebServicesCredentialsBinding',
+                credentialsId: 'smanning-aws-creds'
+            ]]) {
+                sh '''
+                aws sts get-caller-identity --region $AWS_REGION
+                '''
+            }
         }
-      }
     }
     stage('Build docker image'){
       steps{
         sh '''
-          docker build -t spadertech:django .
+          docker build -t spadertech/django:1.1 .
           docker image ls
-          docker tag spadertech:django 690735260167.dkr.ecr.us-east-2.amazonaws.com/spadertech:django
+          docker tag spadertech/django:1.1 690735260167.dkr.ecr.us-east-2.amazonaws.com/spadertech/django:1.1
         '''
       }
     }
     stage('Pushing image to ECR'){
       steps{
         sh '''
-        docker push 690735260167.dkr.ecr.us-east-2.amazonaws.com/spadertech:django
+        docker push 690735260167.dkr.ecr.us-east-2.amazonaws.com/spadertech/django:1.1
         '''
       }
     }
